@@ -4,7 +4,7 @@ NBA Ref Analytics is an informational data project that explores NBA referee tre
 
 The goal is to make referee data easier to explore and to surface patterns that may be worth deeper analysis. The results should be interpreted as statistical indicators, not proof of referee bias or game manipulation.
 
-# Features
+## Features
 
 - Browse NBA referee statistics across multiple seasons
 - Filter referee data by season, split, and minimum games officiated
@@ -14,7 +14,7 @@ The goal is to make referee data easier to explore and to surface patterns that 
 - Compare referee consistency across seasons
 - Display results through an informational frontend and FastAPI backend
 
-# Project Structure
+## Project Structure
 
 ```txt
 nba-ref-analytics/
@@ -32,7 +32,7 @@ nba-ref-analytics/
     raw/
 ```
 
-# Installation
+## Installation
 
 Clone the repository:
 ```bash
@@ -40,7 +40,7 @@ git clone <repo-url>
 cd nba-ref-analytics
 ```
 
-# Frontend
+## Frontend
 The frontend is currently a static website:
 ```bash
 cd frontend
@@ -51,7 +51,7 @@ Then open:
 http://localhost:3000
 ```
 
-# Backend
+## Backend
 Install backend dependencies:
 ```bash
 cd backend
@@ -67,10 +67,10 @@ Which will be available at:
 ```txt
 http://127.0.0.1:8000
 ```
-# Data:
+## Data:
 The data aggregated and used in this project is sourced from NBAstuffer.com. The stored CSV data is located in data/raw/. The backend reads this CSV and calculates derived metrics via service functions. 
 
-# Methodology
+## Methodology
 This project currently uses descriptive statistics, weighted averages, standard deviation, and z-scores to identify officiating patterns.
 Current metrics include:
 - Foul Differential: compares fouls called against road teams versus home teams.
