@@ -1,0 +1,21 @@
+export const el = {
+  seasonFilter: document.querySelector("#seasonFilter"),
+  teamFilter: document.querySelector("#teamFilter"),
+  minGames: document.querySelector("#minGames"),
+  minGamesValue: document.querySelector("#minGamesValue"),
+  searchInput: document.querySelector("#searchInput"),
+  csvInput: document.querySelector("#csvInput"),
+  resetData: document.querySelector("#resetData"),
+  sortToggle: document.querySelector("#sortToggle"),
+  overallScore: document.querySelector("#overallScore"),
+  overallTrend: document.querySelector("#overallTrend"),
+  challengeRate: document.querySelector("#challengeRate"),
+  noCallSeverity: document.querySelector("#noCallSeverity"),
+  mediaRisk: document.querySelector("#mediaRisk"),
+  recordCount: document.querySelector("#recordCount"),
+  leaderChart: document.querySelector("#leaderChart"),
+  signalChart: document.querySelector("#signalChart"),
+  watchlist: document.querySelector("#watchlist"),
+  refTable: document.querySelector("#refTable"),
+  gameCards: document.querySelector("#gameCards")
+};

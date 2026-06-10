@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WhistleRate NBA Referee Accuracy</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <button class="brand page-link" data-page="intro-page" type="button" aria-label="WhistleRate home">
+        <span class="brand-mark">WR</span>
+        <span>
+          <strong>WhistleRate</strong>
+          <small>Referee accuracy intelligence</small>
+        </span>
+      </button>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <button class="page-link active" data-page="intro-page" type="button">Intro</button>
+        <button class="page-link" data-page="data-page" type="button">Data Dashboard</button>
+        <button class="page-link" data-page="future-page" type="button">Future Direction</button>
+      </nav>
+      <button class="nav-cta page-link" data-page="data-page" type="button">Open dashboard</button>
+    </header>
+
+    <main>
+      <section id="intro-page" class="site-page active" aria-label="Introductory page">
+        <section class="hero-section">
+          <div class="hero-copy">
+            <h1>How Accurate are NBA Referees?</h1>
+            <p class="hero-lede">
+              WhistleRate is an informational project about how referee accuracy could be studied using no-call audits, coach's challenge results, media records, and game context.
+            </p>
+            <div class="hero-actions">
+              <button class="primary-action page-link" data-page="data-page" type="button">Explore the data</button>
+              <button class="secondary-action page-link" data-page="future-page" type="button">View next direction</button>
+            </div>
+          </div>
+          <figure class="hero-media">
+            <video width="640" height="360" autoplay loop muted playsinline>
+              <source src="./assets/introvideo.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <p class="subtext">
+              Game-swinging no-call, leading to the Lakers losing in OT.
+            </p>
+          </figure>
+</section>
+        <!-- Add more intro/storytelling content here as the site grows. -->
+        <section class="content-band muted-band">
+          <div class="section-heading split">
+            <div>
+              <p class="eyebrow">Information design</p>
+              <h2>About the website:</h2>
+            </div>
+            <button class="primary-action page-link" data-page="data-page" type="button">Go to dashboard</button>
+          </div>
+          <div class="overview-grid">
+            <article>
+              <strong>Motivation</strong>
+              <p>With the level of dissatisfaction surrounding NBA referee decisions, there's a growing interest in understanding and quantifying referee accuracy.</p>
+            </article>
+            <article>
+              <strong>Data Collection</strong>
+              <p>The data used for this analysis includes foul differentials, experience, and called fouls per game aggregated from nbastuffer.com.</p>
+            </article>
+            <article>
+              <strong>Conclusions</strong>
+              <p>Leaves space for your next expansion, such as film review, source libraries, team impact, or editorial research.</p>
+            </article>
+          </div>
+        </section>
+      </section>
+
+      <section id="data-page" class="site-page" aria-label="Data dashboard page">
+        <section class="subpage-hero">
+          <div>
+            <p class="eyebrow">Data dashboard</p>
+            <h1>Explore NBAstuffer referee stats.</h1>
+          </div>
+          <div class="top-actions">
+            <label class="import-button" for="csvInput">Import CSV</label>
+            <input id="csvInput" type="file" accept=".csv" hidden />
+            <button id="resetData" type="button">Reset</button>
+          </div>
+        </section>
+
+        <section class="platform-section dashboard-page-section">
+          <div class="app-shell">
+            <aside class="sidebar" aria-label="Dashboard controls">
+              <div class="sidebar-block">
+                <strong>Dashboard views</strong>
+                <nav class="nav-tabs" aria-label="Views">
+                  <button class="nav-tab active" data-view="overview" type="button">Overview</button>
+                  <button class="nav-tab" data-view="referees" type="button">Referees</button>
+                  <button class="nav-tab" data-view="games" type="button">Records</button>
+                  <button class="nav-tab" data-view="model" type="button">Schema</button>
+                </nav>
+              </div>
+
+              <div class="control-group">
+                <label for="seasonFilter">Season</label>
+                <select id="seasonFilter">
+                  <option value="all">All seasons</option>
+                </select>
+              </div>
+
+              <div class="control-group">
+                <label for="teamFilter">Split</label>
+                <select id="teamFilter">
+                  <option value="all">All splits</option>
+                </select>
+              </div>
+
+              <div class="control-group">
+                <label for="minGames">Min games</label>
+                <input id="minGames" type="range" min="1" max="82" value="1" />
+                <output id="minGamesValue">1</output>
+              </div>
+
+              <div class="control-group">
+                <label for="searchInput">Search</label>
+                <input id="searchInput" type="search" placeholder="Referee or game" />
+              </div>
+
+              <div class="data-card">
+                <strong>Data inputs</strong>
+                <span>NBAstuffer referee stats</span>
+                <span>Regular season rows</span>
+                <span>Playoff rows where public</span>
+              </div>
+            </aside>
+
+            <div class="main-content">
+              <section id="overview" class="view active" aria-label="Overview">
+                <div class="metric-grid">
+                  <article class="metric-card">
+                    <span>Avg Home Win Rate</span>
+                    <strong id="overallScore">0</strong>
+                    <small id="overallTrend">Weighted by games officiated</small>
+                  </article>
+                  <article class="metric-card">
+                    <span>Called Fouls/Game</span>
+                    <strong id="challengeRate">0%</strong>
+                    <small>Weighted average</small>
+                  </article>
+                  <article class="metric-card">
+                    <span>Home Point Diff.</span>
+                    <strong id="noCallSeverity">0</strong>
+                    <small>Weighted average</small>
+                  </article>
+                  <article class="metric-card">
+                    <span>Total Games</span>
+                    <strong id="mediaRisk">0</strong>
+                    <small>Across matching rows</small>
+                  </article>
+                </div>
+
+                <div class="dashboard-grid">
+                  <section class="panel wide">
+                    <div class="panel-header">
+                      <div>
+                        <h3>Workload Leaders</h3>
+                        <p>Most games officiated in the selected data</p>
+                      </div>
+                      <span id="recordCount" class="pill">0 records</span>
+                    </div>
+                    <canvas id="leaderChart" height="260" aria-label="Workload leaders chart"></canvas>
+                  </section>
+
+                  <section class="panel">
+                    <div class="panel-header">
+                      <div>
+                        <h3>Role Mix</h3>
+                        <p>Share of games by referee role</p>
+                      </div>
+                    </div>
+                    <canvas id="signalChart" height="260" aria-label="Model signal chart"></canvas>
+                  </section>
+
+                  <section class="panel wide">
+                    <div class="panel-header">
+                      <div>
+                        <h3>Largest Foul Differentials</h3>
+                        <p>Rows with the biggest road-minus-home foul gap</p>
+                      </div>
+                    </div>
+                    <div id="watchlist" class="watchlist"></div>
+                  </section>
+                </div>
+              </section>
+
+              <section id="referees" class="view" aria-label="Referees">
+                <div class="panel">
+                  <div class="panel-header">
+                    <div>
+                      <h3>Referee Rows</h3>
+                      <p>Ranked by games officiated</p>
+                    </div>
+                    <button id="sortToggle" type="button">Sort: Most Games</button>
+                  </div>
+                  <div class="table-wrap">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Referee</th>
+                          <th>Season</th>
+                          <th>Split</th>
+                          <th>Role</th>
+                          <th>Games</th>
+                          <th>Home Win %</th>
+                          <th>Fouls/Game</th>
+                          <th>Foul Diff.</th>
+                        </tr>
+                      </thead>
+                      <tbody id="refTable"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+
+              <section id="games" class="view" aria-label="Records">
+                <div class="panel">
+                  <div class="panel-header">
+                    <div>
+                      <h3>Season Records</h3>
+                      <p>Top matching referee-season rows from NBAstuffer</p>
+                    </div>
+                  </div>
+                  <div id="gameCards" class="game-grid"></div>
+                </div>
+              </section>
+
+              <section id="model" class="view" aria-label="Model">
+                <div class="model-grid">
+                  <section class="panel">
+                    <div class="panel-header">
+                      <div>
+                        <h3>Source Coverage</h3>
+                        <p>Public NBAstuffer referee-stat pages currently embedded</p>
+                      </div>
+                    </div>
+                    <dl class="definitions">
+                      <div>
+                        <dt>Seasons</dt>
+                        <dd>2016-17 regular season through 2025-26, plus the public 2017 playoffs page.</dd>
+                      </div>
+                      <div>
+                        <dt>Rows</dt>
+                        <dd>Each row represents a referee, season/split, and role combination from the source tables.</dd>
+                      </div>
+                      <div>
+                        <dt>Limitations</dt>
+                        <dd>This source does not include no-call audits, coach challenge outcomes, or media records.</dd>
+                      </div>
+                    </dl>
+                  </section>
+
+                  <section class="panel">
+                    <div class="panel-header">
+                      <div>
+                        <h3>Dashboard Calculations</h3>
+                        <p>Weighted by games officiated</p>
+                      </div>
+                    </div>
+                    <div class="formula-box">
+                      <code>weighted average = sum(metric * games_officiated) / sum(games_officiated)</code>
+                    </div>
+                    <dl class="definitions">
+                      <div>
+                        <dt>Home Win Rate</dt>
+                        <dd>Percentage of games won by the home team in rows matching the current filters.</dd>
+                      </div>
+                      <div>
+                        <dt>Foul Differential</dt>
+                        <dd>NBAstuffer's road-team foul percentage minus home-team foul percentage expression.</dd>
+                      </div>
+                      <div>
+                        <dt>Balance Score</dt>
+                        <dd>A local display helper used only to color foul-differential cards, not a source metric.</dd>
+                      </div>
+                    </dl>
+                  </section>
+
+                  <section class="panel wide">
+                    <div class="panel-header">
+                      <div>
+                        <h3>CSV Schema</h3>
+                        <p>Embedded from NBAstuffer public referee tables</p>
+                      </div>
+                    </div>
+                    <div class="schema">
+                      <span>season</span>
+                      <span>split</span>
+                      <span>referee</span>
+                      <span>role</span>
+                      <span>gender</span>
+                      <span>experience_years</span>
+                      <span>games_officiated</span>
+                      <span>home_team_win_pct</span>
+                      <span>home_team_point_differential</span>
+                      <span>total_points_per_game</span>
+                      <span>called_fouls_per_game</span>
+                      <span>foul_pct_against_road_teams</span>
+                      <span>foul_pct_against_home_teams</span>
+                      <span>foul_differential_road_minus_home</span>
+                    </div>
+                  </section>
+                </div>
+              </section>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section id="future-page" class="site-page" aria-label="Future direction page">
+        <section class="subpage-hero">
+          <div>
+            <p class="eyebrow">Future direction</p>
+            <h1>Build the next research layer here.</h1>
+            <p>
+              This second subpage is ready for the next branch of the project, whether that becomes film review, source citations, referee profiles, team impact, or public-facing explainers.
+            </p>
+          </div>
+        </section>
+
+        <section class="content-band media-section">
+          <div class="section-heading">
+            <p class="eyebrow">Next expansion</p>
+            <h2>Reserved space for informational data and evidence.</h2>
+          </div>
+          <div class="media-grid">
+            <article class="media-slot large-slot">
+              <span>Primary module</span>
+              <h3>Game film review</h3>
+              <p>Add video embeds, frame-by-frame notes, disputed calls, or a written breakdown of why a call was marked correct or incorrect.</p>
+            </article>
+            <article class="media-slot">
+              <span>Research</span>
+              <h3>Source library</h3>
+              <p>Collect official reports, pool reports, league statements, media articles, and citation links.</p>
+            </article>
+            <article class="media-slot">
+              <span>Analysis</span>
+              <h3>Team impact</h3>
+              <p>Compare how no-calls, challenges, and whistle frequency affect teams across matchups.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="roadmap-section">
+          <div class="section-heading">
+            <p class="eyebrow">Roadmap</p>
+            <h2>Turn the topic into a deeper information system.</h2>
+          </div>
+          <div class="roadmap-grid">
+            <article>
+              <strong>1</strong>
+              <h3>Evidence library</h3>
+              <p>Add documented call examples with source links, timestamps, and review notes.</p>
+            </article>
+            <article>
+              <strong>2</strong>
+              <h3>Referee profiles</h3>
+              <p>Create informational pages for trends, sample size, context, and public record history.</p>
+            </article>
+            <article>
+              <strong>3</strong>
+              <h3>Methodology page</h3>
+              <p>Explain the scoring model, its limitations, and how future data should be verified.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="closing-cta">
+          <p class="eyebrow">WhistleRate</p>
+          <h2>Use this page as the home for the next direction of the project.</h2>
+          <button class="primary-action page-link" data-page="data-page" type="button">Return to dashboard</button>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
