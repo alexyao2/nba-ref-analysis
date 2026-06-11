@@ -18,7 +18,7 @@
       <nav class="site-nav" aria-label="Primary navigation">
         <button class="page-link active" data-page="intro-page" type="button">Intro</button>
         <button class="page-link" data-page="data-page" type="button">Data Dashboard</button>
-        <button class="page-link" data-page="future-page" type="button">Future Direction</button>
+        <button class="page-link" data-page="future-page" type="button">Conclusions</button>
       </nav>
       <button class="nav-cta page-link" data-page="data-page" type="button">Open dashboard</button>
     </header>
@@ -29,7 +29,7 @@
           <div class="hero-copy">
             <h1>How Accurate are NBA Referees?</h1>
             <p class="hero-lede">
-              WhistleRate is an informational project about how referee accuracy could be studied using no-call audits, coach's challenge results, media records, and game context.
+              WhistleRate is an informational project about how referee accuracy and impact can be studied using media records, game context, and point differentials.
             </p>
             <div class="hero-actions">
               <button class="primary-action page-link" data-page="data-page" type="button">Explore the data</button>
@@ -46,11 +46,10 @@
             </p>
           </figure>
 </section>
-        <!-- Add more intro/storytelling content here as the site grows. -->
         <section class="content-band muted-band">
           <div class="section-heading split">
             <div>
-              <p class="eyebrow">Information design</p>
+              <p class="eyebrow">Overview</p>
               <h2>About the website:</h2>
             </div>
             <button class="primary-action page-link" data-page="data-page" type="button">Go to dashboard</button>
@@ -313,69 +312,68 @@
         </section>
       </section>
 
-      <section id="future-page" class="site-page" aria-label="Future direction page">
-        <section class="subpage-hero">
-          <div>
-            <p class="eyebrow">Future direction</p>
-            <h1>Build the next research layer here.</h1>
+      <section id="future-page" class="site-page" aria-label="Conclusions page">
+        <section class="conclusions-stage">
+          <div class="conclusions-copy">
+            <p class="eyebrow">Conclusions</p>
+            <h1>Which referee profiles stand out?</h1>
             <p>
-              This second subpage is ready for the next branch of the project, whether that becomes film review, source citations, referee profiles, team impact, or public-facing explainers.
+              This view uses backend-calculated metric results to compare referee-season profiles. The graph utilizes a consistent regular-season sample with a minimum games threshold so each dot has enough volume to be worth interpreting.
             </p>
-          </div>
-        </section>
 
-        <section class="content-band media-section">
-          <div class="section-heading">
-            <p class="eyebrow">Next expansion</p>
-            <h2>Reserved space for informational data and evidence.</h2>
-          </div>
-          <div class="media-grid">
-            <article class="media-slot large-slot">
-              <span>Primary module</span>
-              <h3>Game film review</h3>
-              <p>Add video embeds, frame-by-frame notes, disputed calls, or a written breakdown of why a call was marked correct or incorrect.</p>
-            </article>
-            <article class="media-slot">
-              <span>Research</span>
-              <h3>Source library</h3>
-              <p>Collect official reports, pool reports, league statements, media articles, and citation links.</p>
-            </article>
-            <article class="media-slot">
-              <span>Analysis</span>
-              <h3>Team impact</h3>
-              <p>Compare how no-calls, challenges, and whistle frequency affect teams across matchups.</p>
-            </article>
-          </div>
-        </section>
+            <div class="conclusion-summary">
+              <article>
+                <span>Home-favorable profiles</span>
+                <strong id="conclusionHomeCount">0</strong>
+                <small>Positive foul differential and positive adjusted home-bias index</small>
+              </article>
+              <article>
+                <span>Road-favorable profiles</span>
+                <strong id="conclusionRoadCount">0</strong>
+                <small>Negative foul differential and negative adjusted home-bias index</small>
+              </article>
+              <article>
+                <span>Largest sample</span>
+                <strong id="conclusionSampleLeader">--</strong>
+                <small>Most games in the backend conclusion sample</small>
+              </article>
+            </div>
 
-        <section class="roadmap-section">
-          <div class="section-heading">
-            <p class="eyebrow">Roadmap</p>
-            <h2>Turn the topic into a deeper information system.</h2>
+            <div id="selectedProfile" class="selected-profile" aria-live="polite">
+              <span>Hover profile</span>
+              <strong>Move over a dot</strong>
+              <p>Referee profile details will appear here.</p>
+            </div>
           </div>
-          <div class="roadmap-grid">
-            <article>
-              <strong>1</strong>
-              <h3>Evidence library</h3>
-              <p>Add documented call examples with source links, timestamps, and review notes.</p>
-            </article>
-            <article>
-              <strong>2</strong>
-              <h3>Referee profiles</h3>
-              <p>Create informational pages for trends, sample size, context, and public record history.</p>
-            </article>
-            <article>
-              <strong>3</strong>
-              <h3>Methodology page</h3>
-              <p>Explain the scoring model, its limitations, and how future data should be verified.</p>
-            </article>
-          </div>
-        </section>
 
-        <section class="closing-cta">
-          <p class="eyebrow">WhistleRate</p>
-          <h2>Use this page as the home for the next direction of the project.</h2>
-          <button class="primary-action page-link" data-page="data-page" type="button">Return to dashboard</button>
+          <div class="conclusions-graph">
+            <section class="panel scatter-panel">
+              <div class="panel-header">
+                <div>
+                  <h3>Backend metric quadrant map</h3>
+                  <p>Hover a dot to view the referee profile</p>
+                </div>
+                <span id="conclusionPlotCount" class="pill">0 plotted</span>
+              </div>
+              <div id="conclusionScatter" class="scatter-svg-wrap" aria-label="Interactive four quadrant referee scatter plot">
+                <div id="profileTooltip" class="profile-tooltip" role="status"></div>
+              </div>
+            </section>
+            <div class="graph-conclusions">
+              <article>
+                <span>Primary read</span>
+                <p>The graph does not prove referee bias, but it highlights referee-season profiles whose foul differential and adjusted home-bias index are unusual enough to justify deeper game-level review.</p>
+              </article>
+              <article>
+                <span>Center vs. edge</span>
+                <p>Profiles closer to the center look more baseline. Profiles farther from the center are more noteworthy, especially with larger sample sizes.</p>
+              </article>
+              <article>
+                <span>Mixed quadrants</span>
+                <p>Dots in the upper-left or lower-right show disagreement between whistle profile and broader home-bias index, which means foul differential alone is not enough to explain the profile.</p>
+              </article>
+            </div>
+          </div>
         </section>
       </section>
     </main>

@@ -1,7 +1,9 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from data.csv_loader import load_csv_rows
 from services.metrics_service import (
     build_overview_metrics,
+    conclusion_scatter_profiles,
     consistency_analysis,
     foul_differential,
     foul_differential_leaders,
@@ -11,6 +13,22 @@ from services.metrics_service import (
 from services.referee_service import filter_rows, get_seasons, get_splits
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:4173",
+        "http://localhost:4174",
+        "http://localhost:4175",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:4173",
+        "http://127.0.0.1:4174",
+        "http://127.0.0.1:4175",
+    ],
+    allow_methods=["GET"],
+    allow_headers=["*"],
+)
 
 @app.get("/api/health")
 def health_check():
@@ -75,6 +93,16 @@ def get_home_bias_index(
 ):
     rows = filter_rows(load_csv_rows(), season, split, min_games)
     return home_bias_index(rows, limit)
+
+
+@app.get("/api/metrics/conclusions/scatter")
+def get_conclusion_scatter_profiles(
+    split: str = "regular_season",
+    min_games: int = 40,
+    limit: int = 120,
+):
+    rows = filter_rows(load_csv_rows(), split=split, min_games=min_games)
+    return conclusion_scatter_profiles(rows, limit)
 
 
 @app.get("/api/metrics/outliers")

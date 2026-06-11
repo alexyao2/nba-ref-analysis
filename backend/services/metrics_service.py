@@ -189,6 +189,61 @@ def interpret_home_bias(index):
     return "Near baseline"
 
 
+def conclusion_scatter_profiles(rows, limit=120):
+    baseline = home_bias_baseline(rows)
+    profiles = []
+
+    for row in rows:
+        profile = home_bias_index_for_row(row, baseline)
+        foul_differential_value = to_float(row["foul_differential_road_minus_home"])
+        home_bias_value = profile["confidence_adjusted_index"]
+
+        profiles.append({
+            "referee": row["referee"],
+            "season": row["season"],
+            "split": row["split"],
+            "role": row["role"],
+            "games_officiated": to_float(row["games_officiated"]),
+            "x": foul_differential_value,
+            "y": home_bias_value,
+            "home_bias_index": profile["home_bias_index"],
+            "confidence_adjusted_index": home_bias_value,
+            "confidence": profile["confidence"],
+            "home_team_win_pct": to_float(row["home_team_win_pct"]),
+            "home_team_point_differential": to_float(row["home_team_point_differential"]),
+            "foul_differential_road_minus_home": foul_differential_value,
+            "interpretation": profile["interpretation"],
+        })
+
+    ranked = sorted(
+        profiles,
+        key=lambda profile: (
+            abs(profile["confidence_adjusted_index"])
+            + abs(profile["foul_differential_road_minus_home"])
+        ) * profile["confidence"],
+        reverse=True,
+    )
+
+    plotted = ranked[:limit]
+    return {
+        "x_axis": "Foul differential: road minus home",
+        "y_axis": "Confidence-adjusted home bias index",
+        "profile_count": len(plotted),
+        "source_row_count": len(rows),
+        "summary": {
+            "home_favorable": len([
+                profile for profile in plotted
+                if profile["x"] >= 0 and profile["y"] >= 0
+            ]),
+            "road_favorable": len([
+                profile for profile in plotted
+                if profile["x"] < 0 and profile["y"] < 0
+            ]),
+        },
+        "profiles": plotted,
+    }
+
+
 def outlier_analysis(rows, field, threshold=2.0, limit=20):
     validate_metric_field(field)
     mean = weighted_average(rows, field)

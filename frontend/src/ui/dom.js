@@ -17,5 +17,12 @@ export const el = {
   signalChart: document.querySelector("#signalChart"),
   watchlist: document.querySelector("#watchlist"),
   refTable: document.querySelector("#refTable"),
-  gameCards: document.querySelector("#gameCards")
+  gameCards: document.querySelector("#gameCards"),
+  conclusionHomeCount: document.querySelector("#conclusionHomeCount"),
+  conclusionRoadCount: document.querySelector("#conclusionRoadCount"),
+  conclusionSampleLeader: document.querySelector("#conclusionSampleLeader"),
+  conclusionPlotCount: document.querySelector("#conclusionPlotCount"),
+  conclusionScatter: document.querySelector("#conclusionScatter"),
+  profileTooltip: document.querySelector("#profileTooltip"),
+  selectedProfile: document.querySelector("#selectedProfile")
 };

@@ -5,6 +5,7 @@ import { aggregateByReferee } from "./services/refereeMetrics.js";
 import { drawLeaderChart, drawSignalChart } from "./ui/chart.js";
 import { el } from "./ui/dom.js";
 import { bindNavigation, showPage } from "./ui/nav.js";
+import { renderConclusions } from "./ui/renderConclusions.js";
 import { renderMetrics, renderWatchlist } from "./ui/renderMetrics.js";
 import { renderGameCards, renderRefTable } from "./ui/renderTables.js";
 
@@ -16,6 +17,7 @@ function render() {
   renderWatchlist(groups, el);
   renderRefTable(groups, el);
   renderGameCards(records, el);
+  renderConclusions(el);
   drawLeaderChart(groups, el);
   drawSignalChart(records, el);
 }

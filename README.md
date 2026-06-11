@@ -109,6 +109,7 @@ GET /api/metrics/overview
 GET /api/metrics/foul-differential
 GET /api/metrics/foul-differential/leaders
 GET /api/metrics/home-bias
+GET /api/metrics/conclusions/scatter
 GET /api/metrics/outliers
 GET /api/metrics/consistency
 ```
@@ -128,12 +129,4 @@ Current metrics include:
 - Outlier Analysis: identifies referee-season rows that differ meaningfully from the population average.
 - Consistency Analysis: compares a referee’s variation across seasons against the overall population baseline.
 
-Note: These metrics are calculated from public data and should be interpreted cautiously. The results can highlight unusual patterns or trends, but they do not independently prove intent, bias, or causation.
-
-## Future Work
-
-- Connect frontend charts directly to backend endpoints
-- Add automated tests for metric calculations
-- Add game-level data for deeper analysis
-- Incorporate coach's challenge data
-- Deploy the frontend and backend to the cloud
+Note: These metrics are exploratory and should be interpreted cautiously. The metrics are calculated from public data, but interpretation remains exploratory. These results can highlight unusual patterns or trends, but they do not independently prove intent, bias, or causation.
