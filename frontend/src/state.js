@@ -1,4 +1,7 @@
 export const state = {
+  dataMode: "api",
+  loading: false,
+  error: null,
   records: [],
   sortBest: true,
   filters: {

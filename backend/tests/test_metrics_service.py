@@ -1,4 +1,4 @@
-import pytest
+import pytest # type: ignore
 
 from services.metrics_service import (
     build_overview_metrics,

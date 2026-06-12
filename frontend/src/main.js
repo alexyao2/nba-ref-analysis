@@ -1,15 +1,30 @@
-import { parseCsv, loadRefereeCsv } from "./data/csv.js";
+import { parseCsv } from "./data/csv.js";
+import {
+  getFoulDifferentialLeaders,
+  getOverviewMetrics,
+  getReferees,
+  getSeasons,
+  getSplits,
+  normalizeApiReferee,
+} from "./services/api.js";
 import { state } from "./state.js";
-import { filteredRecords, populateFilters } from "./services/filters.js";
+import { filteredRecords, populateFilters, populateFiltersFromApi } from "./services/filters.js";
 import { aggregateByReferee } from "./services/refereeMetrics.js";
 import { drawLeaderChart, drawSignalChart } from "./ui/chart.js";
 import { el } from "./ui/dom.js";
 import { bindNavigation, showPage } from "./ui/nav.js";
 import { renderConclusions } from "./ui/renderConclusions.js";
-import { renderMetrics, renderWatchlist } from "./ui/renderMetrics.js";
+import {
+  renderMetrics,
+  renderMetricsFromApi,
+  renderWatchlist,
+  renderWatchlistFromApi,
+} from "./ui/renderMetrics.js";
 import { renderGameCards, renderRefTable } from "./ui/renderTables.js";
 
-function render() {
+let renderRequestId = 0;
+
+function renderCsvDashboard() {
   const records = filteredRecords(state.records, state.filters);
   const groups = aggregateByReferee(records, state.sortBest);
 
@@ -17,9 +32,64 @@ function render() {
   renderWatchlist(groups, el);
   renderRefTable(groups, el);
   renderGameCards(records, el);
-  renderConclusions(el);
   drawLeaderChart(groups, el);
   drawSignalChart(records, el);
+}
+
+async function renderApiDashboard() {
+  const requestId = ++renderRequestId;
+  state.loading = true;
+  state.error = null;
+  el.recordCount.textContent = "Loading backend data";
+
+  try {
+    const [rows, overview, leadersPayload] = await Promise.all([
+      getReferees(state.filters),
+      getOverviewMetrics(state.filters),
+      getFoulDifferentialLeaders(state.filters, 3),
+    ]);
+
+    if (requestId !== renderRequestId) return;
+
+    state.records = rows.map(normalizeApiReferee);
+
+    const displayRecords = filteredRecords(state.records, {
+      ...state.filters,
+      season: "all",
+      split: "all",
+      minGames: 1,
+    });
+    const groups = aggregateByReferee(displayRecords, state.sortBest);
+
+    renderMetricsFromApi(overview, displayRecords, el);
+    renderWatchlistFromApi(leadersPayload.leaders || [], el);
+    renderRefTable(groups, el);
+    renderGameCards(displayRecords, el);
+    drawLeaderChart(groups, el);
+    drawSignalChart(displayRecords, el);
+  } catch (error) {
+    if (requestId !== renderRequestId) return;
+
+    state.error = error.message;
+    el.recordCount.textContent = "Backend unavailable";
+    el.watchlist.innerHTML = '<p class="empty">Start the backend API to load dashboard data.</p>';
+    el.refTable.innerHTML = '<tr><td colspan="8">Backend data failed to load.</td></tr>';
+    el.gameCards.innerHTML = '<p class="empty">Backend data failed to load.</p>';
+  } finally {
+    if (requestId === renderRequestId) {
+      state.loading = false;
+    }
+  }
+}
+
+function render() {
+  if (state.dataMode === "csv") {
+    renderCsvDashboard();
+  } else {
+    renderApiDashboard();
+  }
+
+  renderConclusions(el);
 }
 
 function resetFilters() {
@@ -29,6 +99,15 @@ function resetFilters() {
   el.seasonFilter.value = "all";
   el.teamFilter.value = "all";
   el.searchInput.value = "";
+}
+
+async function loadApiFilters() {
+  const [seasonPayload, splitPayload] = await Promise.all([
+    getSeasons(),
+    getSplits(),
+  ]);
+
+  populateFiltersFromApi(seasonPayload.seasons || [], splitPayload.splits || [], el);
 }
 
 function bindControls() {
@@ -65,6 +144,7 @@ function bindControls() {
 
     const imported = parseCsv(await file.text()).filter((record) => record.referee && record.season);
     if (imported.length) {
+      state.dataMode = "csv";
       state.records = imported;
       resetFilters();
       populateFilters(state.records, el);
@@ -73,9 +153,9 @@ function bindControls() {
   });
 
   el.resetData.addEventListener("click", async () => {
-    state.records = await loadRefereeCsv();
+    state.dataMode = "api";
     resetFilters();
-    populateFilters(state.records, el);
+    await loadApiFilters();
     render();
   });
 
@@ -83,15 +163,14 @@ function bindControls() {
 }
 
 async function init() {
-  state.records = await loadRefereeCsv();
-  populateFilters(state.records, el);
+  await loadApiFilters();
   bindNavigation(render);
   bindControls();
 
   const hashPage = {
     "#intro": "intro-page",
     "#data": "data-page",
-    "#future": "future-page"
+    "#future": "future-page",
   }[window.location.hash];
 
   if (hashPage) {
@@ -103,5 +182,5 @@ async function init() {
 
 init().catch((error) => {
   console.error(error);
-  el.recordCount.textContent = "Data failed to load";
+  el.recordCount.textContent = "Backend data failed to load";
 });

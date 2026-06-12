@@ -42,7 +42,7 @@ cd nba-ref-analytics
 
 ## Frontend
 
-The frontend is currently a static website:
+The frontend is a static website that calls the FastAPI backend for dashboard data and calculated metrics:
 
 ```bash
 cd frontend
@@ -116,7 +116,7 @@ GET /api/metrics/consistency
 
 ## Data
 
-The data aggregated and used in this project is sourced from NBAstuffer.com. The stored CSV data is located in `data/raw/`. The backend reads this CSV and calculates derived metrics via service functions.
+The data aggregated and used in this project is sourced from NBAstuffer.com. The stored CSV data is located in `data/raw/`. The backend reads this CSV and calculates derived metrics via service functions. The frontend treats the backend API as the source of truth for referee rows, filters, summary metrics, and conclusion graph data.
 
 ## Methodology
 
