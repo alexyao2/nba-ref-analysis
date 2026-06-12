@@ -1,6 +1,8 @@
 def to_float(value, default=0.0):
     if value in (None, ""):
         return default
+    if isinstance(value, str) and value.strip() == "":
+        return default
     return float(value)
 
 
